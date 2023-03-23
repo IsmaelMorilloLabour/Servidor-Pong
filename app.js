@@ -6,7 +6,7 @@ const post        = require('./utilsPost.js')
 const database    = require('./utilsMySQL.js')
 const wait        = require('./utilsWait.js')
 
-var db = new database()   // Database example: await db.query("SELECT * FROM test")
+var db = new database()  
 var ws = new webSockets()
 
 // Start HTTP server
@@ -106,8 +106,12 @@ async function getPostDades (req, res) {
   res.end(JSON.stringify(result))
 }
 
+/////////////////// WEB-SOCKETS /////////////////// 
+var msg = {}
+var rst = { type: "broadcast", message: msg }
+ws.broadcast(rst)
 
-const TARGET_FPS = 30;
+const TARGET_FPS = 40;
 const TARGET_MS = 1000 / TARGET_FPS;
 let frameCount = 0;
 let fpsStartTime = Date.now();
@@ -117,10 +121,8 @@ function gameLoop() {
    const startTime = Date.now();
 
    if (currentFPS >= 1) {
-       // Podeu treure la següent línia per millorar el rendiment
        console.log(`FPS actual: ${currentFPS.toFixed(2)}`);
-       // Cridar aquí la funció que actualitza el joc (segons currentFPS)
-       // Cridar aquí la funció que fa un broadcast amb les dades del joc a tots els clients
+       
    }
 
    const endTime = Date.now();
