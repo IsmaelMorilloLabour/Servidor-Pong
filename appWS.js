@@ -25,24 +25,31 @@ class Obj {
 
     // A websocket client connects
     newConnection (ws) {
-
         console.log("Client connected")
-
+    
+        // Check if there are already two clients connected
+        if (this.socketsClients.size === 2) {
+            console.log("Connection rejected. Two clients already connected.")
+            ws.close()
+            return
+        }
+    
         // Add client to the clients list
         const id = uuidv4()
         const color = Math.floor(Math.random() * 360)
         const metadata = { id, color }
         this.socketsClients.set(ws, metadata)
-
+    
         // Send clients list to everyone
         this.sendClients()
-
+    
         // What to do when a client is disconnected
-        ws.on("close", () => { this.socketsClients.delete(ws)  })
-
+        ws.on("close", () => { this.socketsClients.delete(ws) })
+    
         // What to do when a client message is received
         ws.on('message', (bufferedMessage) => { this.newMessage(ws, id, bufferedMessage)})
     }
+    
 
     // Send clientsIds to everyone connected with websockets
     sendClients () {
@@ -53,7 +60,7 @@ class Obj {
         this.wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
                 var id = this.socketsClients.get(client).id
-                var messageAsString = JSON.stringify({ type: "clients", id: id, list: clients })
+                var messageAsString = JSON.stringify({ type: "player", id: id, list: clients })
                 client.send(messageAsString)
             }
         })

@@ -121,8 +121,7 @@ function gameLoop() {
    const startTime = Date.now();
 
    if (currentFPS >= 1) {
-       console.log(`FPS actual: ${currentFPS.toFixed(2)}`);
-       
+      console.log(`FPS actual: ${currentFPS.toFixed(2)}`);
    }
 
    const endTime = Date.now();
